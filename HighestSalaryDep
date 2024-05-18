@@ -1,0 +1,50 @@
+import java.util.*;
+import java.util.stream.*;
+
+class Employee {
+    private String name;
+    private String department;
+    private double salary;
+
+    // Constructor, getters, setters
+    public Employee(String name, String department, double salary) {
+        this.name = name;
+        this.department = department;
+        this.salary = salary;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        List<Employee> employees = Arrays.asList(
+            new Employee("John", "HR", 50000),
+            new Employee("Alice", "HR", 60000),
+            new Employee("Bob", "IT", 70000),
+            new Employee("Emma", "IT", 75000),
+            new Employee("Mike", "IT", 72000)
+        );
+
+        Map<String, Optional<Double>> highestSalariesByDepartment = employees.stream()
+            .collect(Collectors.groupingBy(Employee::getDepartment,
+                Collectors.mapping(Employee::getSalary,
+                    Collectors.maxBy(Comparator.naturalOrder()))));
+
+        // Print highest salary in each department
+        highestSalariesByDepartment.forEach((department, maxSalary) -> {
+            System.out.println("Department: " + department +
+                    ", Highest Salary: " + (maxSalary.isPresent() ? maxSalary.get() : "N/A"));
+        });
+    }
+}
